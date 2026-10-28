@@ -1,0 +1,1062 @@
+
+/* =====================================================
+   NEXUS AI — CENTRAL DE COMANDO
+   Identidade: obsidiana, vidro, prata e violeta
+   Estados: standby, listening, thinking, speaking
+===================================================== */
+
+:root {
+  color-scheme: dark;
+
+  --nx-bg: #030304;
+  --nx-surface: #09090c;
+  --nx-glass: rgba(15, 15, 21, 0.76);
+  --nx-glass-strong: rgba(9, 9, 13, 0.94);
+
+  --nx-white: #f5f3fa;
+  --nx-silver: #c5c2d0;
+  --nx-muted: #777583;
+
+  --nx-violet: #a78bfa;
+  --nx-violet-soft: rgba(167, 139, 250, 0.18);
+  --nx-violet-glow: rgba(167, 139, 250, 0.12);
+
+  --nx-green: #78f0a3;
+  --nx-red: #ff858e;
+
+  --nx-line: rgba(222, 218, 240, 0.11);
+  --nx-line-strong: rgba(222, 218, 240, 0.2);
+}
+
+/* -----------------------------------------------------
+   BASE
+----------------------------------------------------- */
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+  background: var(--nx-bg);
+}
+
+body {
+  color: var(--nx-white);
+  background: #030304;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  color: #fff;
+  background: rgba(167, 139, 250, 0.35);
+}
+
+/* -----------------------------------------------------
+   APLICAÇÃO
+----------------------------------------------------- */
+
+.nexus-app {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex: 0 0 260px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.main-panel {
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.dashboard-scroll {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.composer-area {
+  flex: 0 0 auto;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* -----------------------------------------------------
+   DASHBOARD
+----------------------------------------------------- */
+
+.dashboard-scroll {
+  width: 100%;
+  min-width: 0;
+  padding: 20px clamp(14px, 2.5vw, 34px) 24px;
+  background: #030304;
+  scrollbar-color: #383440 transparent;
+}
+
+.dashboard-heading {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto 18px;
+}
+
+.dashboard-heading h1 {
+  color: var(--nx-white);
+  font-size: clamp(24px, 2.1vw, 34px);
+  letter-spacing: -1.1px;
+}
+
+.dashboard-subtitle {
+  color: var(--nx-muted);
+  font-size: 12px;
+}
+.dashboard-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 300px !important;
+  gap: 24px !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0;
+  margin: 0 auto;
+}
+
+.core-panel {
+  min-width: 0;
+  width: 100%;
+}
+
+.right-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .right-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .right-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* -----------------------------------------------------
+   SUPERFÍCIES DE VIDRO
+----------------------------------------------------- */
+
+.core-panel,
+.info-card,
+.quick-actions,
+.conversation-panel {
+  min-width: 0;
+  color: var(--nx-white);
+  border: 1px solid var(--nx-line);
+  border-radius: 12px;
+  background: var(--nx-glass);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 55px rgba(0, 0, 0, 0.25);
+}
+
+.core-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-color: rgba(222, 218, 240, 0.14);
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(167, 139, 250, 0.055),
+      transparent 43%
+    ),
+    #030304;
+  box-shadow:
+    inset 0 0 70px rgba(167, 139, 250, 0.018),
+    0 20px 70px rgba(0, 0, 0, 0.3);
+}
+
+/* -----------------------------------------------------
+   BARRA SUPERIOR DO NÚCLEO
+----------------------------------------------------- */
+
+.panel-topline {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 18px;
+  color: var(--nx-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+}
+
+.core-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--nx-silver);
+}
+
+.core-state i,
+.status-pill i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--nx-muted);
+}
+
+.core-online ~ .core-caption .status-pill.online i,
+.core-state:has(+ .core-online) i {
+  background: var(--nx-green);
+  box-shadow: 0 0 10px rgba(120, 240, 163, 0.4);
+}
+
+/* -----------------------------------------------------
+   ÁREA PRINCIPAL — NÚCLEO 3D
+----------------------------------------------------- */
+
+.core-visual {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  min-height: 480px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(167, 139, 250, 0.055),
+      transparent 26%
+    ),
+    #030304;
+  transition: background 500ms ease;
+}
+
+/* Grade técnica quase invisível */
+.core-visual::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black, transparent 72%);
+}
+
+/* Moldura de vidro minimalista */
+.core-visual::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 16px;
+  pointer-events: none;
+  border: 1px solid rgba(235, 230, 255, 0.045);
+  clip-path: polygon(
+    0 20px,
+    20px 20px,
+    20px 0,
+    calc(100% - 20px) 0,
+    calc(100% - 20px) 20px,
+    100% 20px,
+    100% calc(100% - 20px),
+    calc(100% - 20px) calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    20px 100%,
+    20px calc(100% - 20px),
+    0 calc(100% - 20px)
+  );
+}
+
+/* O container do objeto 3D fica exatamente no centro */
+.welcome-orb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: block;
+  width: clamp(250px, 29vw, 370px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  filter:
+    drop-shadow(0 0 22px rgba(220, 212, 255, 0.12))
+    drop-shadow(0 0 65px rgba(167, 139, 250, 0.12));
+  animation: nx-orb-float 7s ease-in-out infinite;
+  transition:
+    filter 500ms ease,
+    opacity 500ms ease;
+}
+
+.nexus-core {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  background: transparent;
+}
+
+.nexus-core canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+/* -----------------------------------------------------
+   ÓRBITAS
+----------------------------------------------------- */
+
+.core-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  aspect-ratio: 1;
+  border: 1px solid rgba(221, 214, 244, 0.09);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition:
+    border-color 500ms ease,
+    opacity 500ms ease;
+}
+
+.core-orbit.orbit-one {
+  width: 43%;
+  border-color: rgba(235, 230, 255, 0.16);
+}
+
+.core-orbit.orbit-two {
+  width: 62%;
+  border-color: rgba(167, 139, 250, 0.17);
+}
+
+.core-orbit.orbit-three {
+  width: 80%;
+  border-style: dashed;
+  border-color: rgba(235, 230, 255, 0.08);
+}
+
+.core-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.core-crosshair.horizontal {
+  width: 86%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(220, 212, 245, 0.12),
+    transparent
+  );
+}
+
+.core-crosshair.vertical {
+  width: 1px;
+  height: 86%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(220, 212, 245, 0.12),
+    transparent
+  );
+}
+
+.core-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: 30%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.12);
+  filter: blur(48px);
+  transform: translate(-50%, -50%);
+  animation: nx-halo-pulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------
+   MARCADORES DO NÚCLEO
+----------------------------------------------------- */
+
+.core-coordinate {
+  position: absolute;
+  z-index: 4;
+  color: var(--nx-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.08);
+  pointer-events: none;
+}
+
+.core-coordinate b {
+  color: var(--nx-silver);
+  font-weight: 500;
+}
+
+.core-coordinate.coordinate-top {
+  top: 22px;
+  left: 24px;
+}
+
+.core-coordinate.coordinate-bottom {
+  bottom: 20px;
+  left: 24px;
+}
+
+/* -----------------------------------------------------
+   PAINÉIS TÉCNICOS DISCRETOS
+----------------------------------------------------- */
+
+.hud-readout {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 138px;
+  max-width: 25%;
+  padding: 10px 11px;
+  overflow-wrap: anywhere;
+  color: var(--nx-white);
+  border: 1px solid rgba(230, 226, 245, 0.08);
+  border-left: 2px solid rgba(194, 188, 213, 0.45);
+  border-radius: 5px;
+  background: rgba(8, 8, 12, 0.78);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  font-family: "JetBrains Mono", monospace;
+  pointer-events: none;
+}
+
+.hud-readout-label {
+  color: #aaa6b8;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.hud-readout strong {
+  color: var(--nx-white);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.hud-readout-detail {
+  color: var(--nx-muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.hud-readout-line {
+  width: 38px;
+  height: 1px;
+  margin-top: 3px;
+  background: linear-gradient(90deg, var(--nx-silver), transparent);
+}
+
+.hud-readout-left {
+  top: 16%;
+  left: 2.5%;
+}
+
+.hud-readout-right {
+  top: 16%;
+  right: 2.5%;
+  align-items: flex-end;
+  text-align: right;
+  border-right: 2px solid rgba(194, 188, 213, 0.45);
+  border-left: 1px solid rgba(230, 226, 245, 0.08);
+}
+
+.hud-readout-right .hud-readout-line {
+  background: linear-gradient(270deg, var(--nx-silver), transparent);
+}
+
+.hud-readout-bottom-left {
+  bottom: 8%;
+  left: 2.5%;
+}
+
+.hud-readout-bottom-right {
+  right: 2.5%;
+  bottom: 8%;
+  align-items: flex-end;
+  text-align: right;
+  border-right: 2px solid rgba(194, 188, 213, 0.45);
+  border-left: 1px solid rgba(230, 226, 245, 0.08);
+}
+
+.hud-readout-bottom-right .hud-readout-line {
+  background: linear-gradient(270deg, var(--nx-silver), transparent);
+}
+
+/* -----------------------------------------------------
+   ESTADOS DO NÚCLEO
+----------------------------------------------------- */
+
+/* Em espera: esfera calma */
+.core-online {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(167, 139, 250, 0.065),
+      transparent 32%
+    ),
+    #030304;
+}
+
+.core-online .welcome-orb {
+  filter:
+    drop-shadow(0 0 22px rgba(220, 212, 255, 0.15))
+    drop-shadow(0 0 60px rgba(167, 139, 250, 0.1));
+}
+
+.core-online .orbit-two {
+  animation: nx-spin 32s linear infinite;
+}
+
+/* Escutando: órbitas mais rápidas e violeta mais presente */
+.core-listening {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(167, 139, 250, 0.14),
+      transparent 37%
+    ),
+    #030304;
+}
+
+.core-listening .welcome-orb {
+  filter:
+    drop-shadow(0 0 28px rgba(235, 230, 255, 0.23))
+    drop-shadow(0 0 70px rgba(167, 139, 250, 0.24));
+}
+
+.core-listening .core-orbit {
+  border-color: rgba(201, 183, 255, 0.27);
+}
+
+.core-listening .orbit-two {
+  animation: nx-spin 8s linear infinite;
+}
+
+.core-listening .orbit-three {
+  animation: nx-spin 17s linear infinite reverse;
+}
+
+/* Processando: órbitas aceleradas e brilho branco */
+.core-thinking {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(222, 216, 255, 0.12),
+      transparent 36%
+    ),
+    #030304;
+}
+
+.core-thinking .welcome-orb {
+  filter:
+    drop-shadow(0 0 34px rgba(255, 255, 255, 0.22))
+    drop-shadow(0 0 75px rgba(167, 139, 250, 0.24));
+}
+
+.core-thinking .orbit-one {
+  animation: nx-spin 4s linear infinite;
+}
+
+.core-thinking .orbit-two {
+  animation: nx-spin 6s linear infinite reverse;
+}
+
+.core-thinking .orbit-three {
+  animation: nx-spin 10s linear infinite;
+}
+
+/* Offline: sem exagero visual */
+.core-offline {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 133, 142, 0.035),
+      transparent 36%
+    ),
+    #030304;
+}
+
+.core-offline .welcome-orb {
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.07));
+}
+
+.core-offline .core-orbit {
+  border-color: rgba(255, 133, 142, 0.12);
+}
+
+.core-offline .core-coordinate b {
+  color: var(--nx-red);
+}
+
+/* -----------------------------------------------------
+   LEITURAS DE STATUS
+----------------------------------------------------- */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--nx-silver);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.6px;
+}
+
+.status-pill.online i {
+  background: var(--nx-green);
+  box-shadow: 0 0 10px rgba(120, 240, 163, 0.4);
+}
+
+.status-pill.offline i {
+  background: var(--nx-red);
+  box-shadow: 0 0 8px rgba(255, 133, 142, 0.22);
+}
+
+.status-pill.connecting i {
+  background: #d5c18a;
+  animation: nx-status-pulse 1.2s ease-in-out infinite;
+}
+
+/* -----------------------------------------------------
+   LEGENDA ABAIXO DO NÚCLEO
+----------------------------------------------------- */
+
+.core-caption {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 20px;
+  border-top: 1px solid var(--nx-line);
+  background: rgba(5, 5, 8, 0.94);
+}
+
+.core-caption h2 {
+  margin: 0 0 5px;
+  color: var(--nx-white);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+}
+
+.core-caption p {
+  margin: 0;
+  color: var(--nx-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* -----------------------------------------------------
+   PAINÉIS AUXILIARES
+----------------------------------------------------- */
+
+.right-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-card {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--nx-glass);
+}
+
+.card-heading {
+  color: var(--nx-muted);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.card-icon {
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.025);
+}
+
+.metric-row {
+  flex-wrap: wrap;
+}
+
+.metric-row span,
+.metric-row strong {
+  font-size: 10px;
+}
+
+.system-main-status {
+  align-items: flex-start;
+}
+
+.session-number {
+  color: var(--nx-white);
+  font-size: 25px;
+}
+
+/* -----------------------------------------------------
+   AÇÕES E CONVERSA
+----------------------------------------------------- */
+
+.quick-actions,
+.conversation-panel {
+  width: 100%;
+  max-width: 1500px;
+  margin: 14px auto 0;
+}
+
+.quick-actions {
+  padding: 15px;
+}
+
+.suggestion-card {
+  background: rgba(13, 12, 17, 0.82);
+  border-color: var(--nx-line);
+  transition:
+    background 200ms ease,
+    border-color 200ms ease;
+}
+
+.suggestion-card:hover {
+  border-color: var(--nx-line-strong);
+  background: rgba(23, 20, 31, 0.9);
+}
+
+.suggestion-icon {
+  border-color: var(--nx-line);
+}
+
+/* -----------------------------------------------------
+   CAMPO DE COMANDO
+----------------------------------------------------- */
+
+.composer-area {
+  padding-top: 10px;
+  padding-bottom: 8px;
+  background: #030304;
+}
+
+.message-composer {
+  width: 100%;
+  max-width: 1500px;
+  min-height: 52px;
+  border-color: var(--nx-line-strong);
+  background: rgba(12, 11, 16, 0.96);
+}
+
+.message-composer:focus-within {
+  border-color: rgba(167, 139, 250, 0.48);
+  box-shadow:
+    0 0 24px rgba(167, 139, 250, 0.055),
+    inset 0 0 12px rgba(167, 139, 250, 0.025);
+}
+
+.composer-disclaimer {
+  margin-top: 6px;
+  color: var(--nx-muted);
+}
+
+/* -----------------------------------------------------
+   ANIMAÇÕES
+----------------------------------------------------- */
+
+@keyframes nx-orb-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(-6px);
+  }
+}
+
+@keyframes nx-halo-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    scale: 0.9;
+  }
+
+  50% {
+    opacity: 0.8;
+    scale: 1.12;
+  }
+}
+
+@keyframes nx-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes nx-status-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* -----------------------------------------------------
+   RESPONSIVIDADE
+----------------------------------------------------- */
+
+
+/* Desktop: dimensões do núcleo 3D */
+@media (min-width: 1200px) {
+  .core-visual {
+    min-height: min(64vh, 650px);
+  }
+
+  .welcome-orb {
+    width: clamp(300px, 25vw, 410px);
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .right-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .right-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .core-visual {
+    min-height: 430px;
+  }
+
+  .welcome-orb {
+    width: clamp(230px, 32vw, 310px);
+  }
+
+  .hud-readout {
+    width: 120px;
+    max-width: 25%;
+    padding: 8px;
+  }
+
+  .hud-readout-left,
+  .hud-readout-right {
+    top: 12%;
+  }
+
+  .hud-readout-bottom-left,
+  .hud-readout-bottom-right {
+    bottom: 6%;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-scroll {
+    padding: 14px 10px 18px;
+  }
+
+  .dashboard-heading {
+    margin-bottom: 12px;
+  }
+
+  .dashboard-heading h1 {
+    font-size: 24px;
+  }
+
+  .core-panel {
+    border-radius: 9px;
+  }
+
+  .panel-topline {
+    padding: 12px;
+    font-size: 8px;
+  }
+
+  .core-visual {
+    min-height: 390px;
+  }
+
+  .welcome-orb {
+    width: 220px;
+    max-width: 75%;
+  }
+
+  .core-orbit.orbit-one {
+    width: 48%;
+  }
+
+  .core-orbit.orbit-two {
+    width: 70%;
+  }
+
+  .core-orbit.orbit-three {
+    width: 92%;
+  }
+
+  .hud-readout {
+    width: 94px;
+    max-width: 29%;
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .hud-readout-label {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+  }
+
+  .hud-readout strong {
+    font-size: 9px;
+  }
+
+  .hud-readout-detail {
+    font-size: 7px;
+  }
+
+  .hud-readout-left {
+    top: 10%;
+    left: 2%;
+  }
+
+  .hud-readout-right {
+    top: 10%;
+    right: 2%;
+  }
+
+  .hud-readout-bottom-left {
+    bottom: 5%;
+    left: 2%;
+  }
+
+  .hud-readout-bottom-right {
+    right: 2%;
+    bottom: 5%;
+  }
+
+  .core-coordinate {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+  }
+
+  .core-coordinate.coordinate-top {
+    top: 12px;
+    left: 12px;
+  }
+
+  .core-coordinate.coordinate-bottom {
+    bottom: 12px;
+    left: 12px;
+  }
+
+  .core-caption {
+    align-items: flex-start;
+    padding: 13px;
+  }
+
+  .core-caption h2 {
+    font-size: 13px;
+  }
+
+  .core-caption p {
+    font-size: 10px;
+  }
+}
+
+/* Respeita a preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,104 @@
+import NexusCore from './components/NexusCore'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
+import { getNexusStatus, sendChatMessage } from './api'
+import './App.css'
+
+type ChatMessage = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+type Conversation = {
+  id: string
+  title: string
+  messages: ChatMessage[]
+  pinned: boolean
+  updatedAt: number
+  projectId: string | null
+}
+
+type Project = {
+  id: string
+  name: string
+}
+
+type SpeechRecognitionResult = {
+  transcript: string
+}
+
+type SpeechRecognitionEventLike = {
+  results: ArrayLike<ArrayLike<SpeechRecognitionResult>>
+}
+
+type SpeechRecognitionLike = {
+  lang: string
+  interimResults: boolean
+  continuous: boolean
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: (() => void) | null
+  onend: (() => void) | null
+  start: () => void
+  stop: () => void
+}
+
+type SpeechWindow = Window & {
+  SpeechRecognition?: new () => SpeechRecognitionLike
+  webkitSpeechRecognition?: new () => SpeechRecognitionLike
+}
+
+const STORAGE_KEY = 'nexus-conversations-v1'
+const PROJECTS_KEY = 'nexus-projects-v1'
+
+function App() {
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+  const [activeChatId, setActiveChatId] = useState<string | null>(null)
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null)
+
+  const [message, setMessage] = useState('')
+  const [search, setSearch] = useState('')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [isSending, setIsSending] = useState(false)
+  const [systemStatus, setSystemStatus] = useState('connecting')
+  const [toast, setToast] = useState('')
+  const [storageLoaded, setStorageLoaded] = useState(false)
+
+  // Recursos de voz
+  const [isListening, setIsListening] = useState(false)
+  const [voiceEnabled, setVoiceEnabled] = useState(true)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
+
+   // Carrega o histórico salvo no navegador.
+  useEffect(() => {
+    try {
+      const savedChats = localStorage.getItem(STORAGE_KEY)
+      const savedProjects = localStorage.getItem(PROJECTS_KEY)
+
+      if (savedChats) {
+        const parsedChats: Conversation[] = JSON.parse(savedChats)
+        setConversations(parsedChats)
+
+        if (parsedChats.length > 0) {
+          const latestChat = [...parsedChats].sort(
+            (a, b) => b.updatedAt - a.updatedAt
+          )[0]
+
+          if (latestChat) {
+            setActiveChatId(latestChat.id)
+          }
+        }
+      }
+
+      if (savedProjects) {
+        setProjects(JSON.parse(savedProjects))
+      }
+    } catch (error) {
+      console.error(
+        'Não foi possível carregar o histórico do Nexus.',
+        error
+      )
+     } finally {
+      setStorageLoaded(true)
+    }
+  }, [])

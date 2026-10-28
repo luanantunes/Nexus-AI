@@ -1,0 +1,29 @@
+
+# Ambientes Python
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Dependências e builds do frontend
+frontend/node_modules/
+frontend/dist/
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+*.log
+
+# Arquivos temporários e debug
+frontend/App-debug.txt
+
+# Sistema operacional e editor
+.DS_Store
+Thumbs.db
+.vscode/
